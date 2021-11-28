@@ -1,0 +1,9 @@
+/* Here is your custom css styles. */
+@font-face{
+    font-family: 'YaHeiMonacoHybrid';
+    src: url('../font/YaHeiMonacoHybrid.ttf');
+}
+
+body{
+    font-family: 'YaHeiMonacoHybrid';
+}
