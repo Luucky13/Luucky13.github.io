@@ -152,33 +152,6 @@
     
     
     <entry>
-      <title>hadoop完全分布式的集群群起和测试</title>
-      <link href="2021/07/12/hadoop%E5%AE%8C%E5%85%A8%E5%88%86%E5%B8%83%E5%BC%8F%E7%9A%84%E9%9B%86%E7%BE%A4%E7%BE%A4%E8%B5%B7%E5%92%8C%E6%B5%8B%E8%AF%95/"/>
-      <url>2021/07/12/hadoop%E5%AE%8C%E5%85%A8%E5%88%86%E5%B8%83%E5%BC%8F%E7%9A%84%E9%9B%86%E7%BE%A4%E7%BE%A4%E8%B5%B7%E5%92%8C%E6%B5%8B%E8%AF%95/</url>
-      
-        <content type="html"><![CDATA[<h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><p>配置完虚拟机集群之后，我们需要知道如何启动hdfs来储存数据，如何使用mapreduce来计算和统计数据，如何启动yarn来管理运算任务。<br>标明一下三台虚拟机的任务:<br><strong>hdfs方向</strong>:<br>hadoop102: nameNode, dataNode<br>hadoop103: dataNode<br>hadoop104: dataNode, secondarynamenode<br><strong>yarn</strong>:<br>hadoop102: nodeManager<br>hadoop103: nodeManager, ResourceManager<br>hadoop104: nodeManager</p><h2 id="启动集群"><a href="#启动集群" class="headerlink" title="启动集群"></a>启动集群</h2><h3 id="1-hdfs初始化"><a href="#1-hdfs初始化" class="headerlink" title="1.hdfs初始化"></a>1.hdfs初始化</h3><p>第一次启动集群的时候需要初始化一下nameNode。<strong>ps:当需要初始化的时候，记得停止hdfs的结点运行，并删除结点上的log和data文件</strong><br>初始化命令：<strong>hdfs namenode -format</strong></p><h3 id="2-启动hdfs"><a href="#2-启动hdfs" class="headerlink" title="2.启动hdfs"></a>2.启动hdfs</h3><p><img src="/img/hadoop_start/start1.png"><br>在hadoop路径中的sbin文件夹中有start-dfs的命令可以启动hdfs，通用其中也有许多的启动命令，yarn的启动命令也在其中。</p><h3 id="3-启动yarn"><a href="#3-启动yarn" class="headerlink" title="3.启动yarn"></a>3.启动yarn</h3><p>如2所示，使用其中的start-yarn的命令可以其中yarn<br><strong>使用jps命令可以查看在该机器下当前运行的java进程，我们可以利用它来查看当前结点机器运行的任务</strong></p><h3 id="4-hadoop提供的web网页端口"><a href="#4-hadoop提供的web网页端口" class="headerlink" title="4.hadoop提供的web网页端口"></a>4.hadoop提供的web网页端口</h3><p>针对yarn和hdfs分别有两个网页来显示文件储存情况和mapreduce的任务情况。如下二图所示（hdfs的没截到网址实际网址为hadoop102:9870，实际情况由集群配置情况来定）。<br><img src="/img/hadoop_start/web_hdfs.png"><br><img src="/img/hadoop_start/web_yarn.png"></p><h2 id="集群测试"><a href="#集群测试" class="headerlink" title="集群测试"></a>集群测试</h2><p>集群被启动后，我们需要掌握如何管理集群。比如如何运行一个计算任务，如何来上传一个文件到hdfs上去。</p><h3 id="1-上传文件至hdfs"><a href="#1-上传文件至hdfs" class="headerlink" title="1.上传文件至hdfs"></a>1.上传文件至hdfs</h3><p>命令样例如下：</p><pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">hadoop fs -put $HADOOP_HOME&#x2F;wcinput&#x2F;word.text &#x2F;input<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p><img src="/img/hadoop_start/input.png"><br>后面两个路径分别是被上传的文件路径和hdfs中的路径。<br>上传了文件后，通过web页面我们可以看到，hdfs中已经出现了被上传的文件。那么这只是一个端口，我们实际的机器中这些文件被存储在hadoop的哪个位置中。一下路径为hdfs的存储路径：<br><img src="/img/hadoop_start/k1.png"><br><img src="/img/hadoop_start/k2.png"><br>而且针对hadoop的高可用性，所有datanode上都会存储有这些数据。</p><h3 id="2-下载文件"><a href="#2-下载文件" class="headerlink" title="2.下载文件"></a>2.下载文件</h3><pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">hadoop fs -get &#x2F;jdk-8u212-linux-x64.tar.gz .&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>前一个路径为hdfs的文件路径，后一个为需要下载到的路径</p><h3 id="3-运行mapreduce的实例"><a href="#3-运行mapreduce的实例" class="headerlink" title="3.运行mapreduce的实例"></a>3.运行mapreduce的实例</h3><p>命令实例：</p><pre class="line-numbers language-sh" data-language="sh"><code class="language-sh">hadoop jar share&#x2F;hadoop&#x2F;mapreduce&#x2F;hadoop-mapreduce-examples-3.1.3.jar wordcount &#x2F;input &#x2F;output<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre><p>这里采用的是hadoop自带的example的mapreduce程序代码。<br>可以看到对应的yarn网页会出现一条计算的记录。<br><img src="/img/hadoop_start/test_yarn.png"></p>]]></content>
-      
-      
-      <categories>
-          
-          <category> Big data development </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> Big data </tag>
-            
-            <tag> Hadoop </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>2021.7.10 每日两题</title>
       <link href="2021/07/10/2021-7-10-%E6%AF%8F%E6%97%A5%E4%B8%A4%E9%A2%98/"/>
       <url>2021/07/10/2021-7-10-%E6%AF%8F%E6%97%A5%E4%B8%A4%E9%A2%98/</url>
@@ -313,9 +286,9 @@
             
             <tag> LeetCode </tag>
             
-            <tag> 动态规划 </tag>
-            
             <tag> 算法 </tag>
+            
+            <tag> 动态规划 </tag>
             
             <tag> 数据结构 </tag>
             
